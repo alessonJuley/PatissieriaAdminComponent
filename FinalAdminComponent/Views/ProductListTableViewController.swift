@@ -162,12 +162,15 @@ class ProductListTableViewController: UIViewController, UITableViewDataSource, U
                     productImage: productImage
                 )
                 
+                // ============================FOR TESTING============================
                 let rowData = "THIS IS PRODUCT TABLE CONTROLLER LOAD SAVED PRODUCTS " + "ID: \(productID)\t\tname: \(productName)\t\tstock: \(productStock)\t\tprice: \(productPrice)\t\turl: \(productImage)\n"
                 showData += rowData
                 
                 print(showData)
+                // ============================FOR TESTING============================
                 products.append(savedProduct)
             }
+            sqlite3_finalize(selectStatementQuery)
         }
         productTableView.reloadData()
     }
@@ -175,12 +178,12 @@ class ProductListTableViewController: UIViewController, UITableViewDataSource, U
     
     // MARK: loadAlphabeticalProducts
     // ===============================SQL LOAD ALPHABETICAL PRODUCTS START========================
-    let selectProductNameQuery = "SELECT * FROM ProductList ORDER BY productName ASC"
-    var selectProductNameStatementQuery: OpaquePointer?
-    
     func loadAlphabeticalProducts(){
         
         products = []
+        
+        let selectProductNameQuery = "SELECT * FROM ProductList ORDER BY productName ASC"
+        var selectProductNameStatementQuery: OpaquePointer?
         
         if sqlite3_prepare_v2(dbQueue, selectProductNameQuery, -1, &selectProductNameStatementQuery, nil) == SQLITE_OK {
             while sqlite3_step(selectProductNameStatementQuery) == SQLITE_ROW {
@@ -211,12 +214,12 @@ class ProductListTableViewController: UIViewController, UITableViewDataSource, U
     
     // MARK: loadLowStockProducts
     // ===============================SQL LOAD LOW STOCK PRODUCTS START============================
-    let selectProductStockQuery = "SELECT * FROM ProductList WHERE productStock <= 5 ORDER BY productStock ASC"
-    var selectProductStockStatementQuery: OpaquePointer?
-    
     func loadLowStockProducts(){
         
         products = []
+        
+        let selectProductStockQuery = "SELECT * FROM ProductList WHERE productStock <= 5 ORDER BY productStock ASC"
+        var selectProductStockStatementQuery: OpaquePointer?
         
         if sqlite3_prepare_v2(dbQueue, selectProductStockQuery, -1, &selectProductStockStatementQuery, nil) == SQLITE_OK {
             while sqlite3_step(selectProductStockStatementQuery) == SQLITE_ROW {
@@ -247,12 +250,12 @@ class ProductListTableViewController: UIViewController, UITableViewDataSource, U
     
     // MARK: loadLowHighPriceProducts
     // ===============================SQL LOAD LOW TO HIGH PRICE PRODUCTS START====================
-    let selectPriceQuery = "SELECT * FROM ProductList ORDER BY productPrice ASC"
-    var selectPriceStatementQuery: OpaquePointer?
-    
     func loadLowHighPriceProducts(){
         
         products = []
+        
+        let selectPriceQuery = "SELECT * FROM ProductList ORDER BY productPrice ASC"
+        var selectPriceStatementQuery: OpaquePointer?
         
         if sqlite3_prepare_v2(dbQueue, selectPriceQuery, -1, &selectPriceStatementQuery, nil) == SQLITE_OK {
             while sqlite3_step(selectPriceStatementQuery) == SQLITE_ROW {
@@ -280,9 +283,4 @@ class ProductListTableViewController: UIViewController, UITableViewDataSource, U
         productTableView.reloadData()
     }
     // ===============================SQL LOAD LOW TO HIGH PRICE PRODUCTS END======================
-    
-    
-    
-    
-    
 }
