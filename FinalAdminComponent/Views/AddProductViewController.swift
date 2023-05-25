@@ -75,11 +75,10 @@ class AddProductViewController: UIViewController, UITextFieldDelegate, UITextVie
             
             // insert data
             let insertProductStatementString = "INSERT INTO ProductList (productName, productDescription, productCategory, productStock, productPrice, productImage) VALUES (?, ?, ?, ?, ?, ?)"
-            
             var insertStatementQuery : OpaquePointer?
-            // compile sql query and check if status is okay
+            
             if(sqlite3_prepare_v2(dbQueue, insertProductStatementString, -1, &insertStatementQuery, nil)) == SQLITE_OK {
-                // bind the values of textfield inputs to sql query
+                // convert textfield inputs to appropriate type in db
                 let productStock = Int32(addProductStock.text ?? "") ?? 0
                 
                 let productPriceString = addProductPrice.text ?? ""
@@ -132,11 +131,12 @@ class AddProductViewController: UIViewController, UITextFieldDelegate, UITextVie
                     let price = Double(sqlite3_column_double(selectStatementQuery, 3))
                     let url = String(cString: sqlite3_column_text(selectStatementQuery, 4))
                     
+                    // ===========================FOR TESTING===========================
                     let rowData = "[AddProductViewController>addProductButton]THIS IS ADD PRODUCT BUTTON ADD PRODUCTVC " + "ID: \(id)\t\tname: \(name)\t\tstock: \(stock)\t\tprice: \(price)\t\turl: \(url)\n"
                     
                     showData += rowData
-                    
                     print(showData ?? "This is showData")
+                    // ===========================FOR TESTING===========================
                 }
                 sqlite3_finalize(selectStatementQuery)
             }
