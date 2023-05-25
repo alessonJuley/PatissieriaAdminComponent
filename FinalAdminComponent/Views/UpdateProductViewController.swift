@@ -28,6 +28,7 @@ class UpdateProductViewController: UIViewController, UITextFieldDelegate, UIText
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // set fields with product info
         updateProductName.text = selectedProduct.productName
         updateProductDescription.text = selectedProduct.productDescription
         updateProductCategory.text = selectedProduct.productCategory
@@ -45,7 +46,7 @@ class UpdateProductViewController: UIViewController, UITextFieldDelegate, UIText
         updateProductPrice.delegate = self
         updateProductImageURL.delegate = self
         
-        // make image autoload
+        // make updateProductPic autoload
         let urlText = updateProductImageURL.text!
         
         let imgURL = URL(string: urlText)
@@ -106,13 +107,14 @@ class UpdateProductViewController: UIViewController, UITextFieldDelegate, UIText
     
     @IBAction func updateProductButton(_ sender: UIButton) {
         if validateForm(){
-            // update data
-            let updateProductStatementString = "UPDATE ProductList SET productName = ?, productDescription = ?, productCategory = ?, productStock = ?, productPrice = ?, productImage = ? WHERE productID = ?"
             
+            let updateProductStatementString = "UPDATE ProductList SET productName = ?, productDescription = ?, productCategory = ?, productStock = ?, productPrice = ?, productImage = ? WHERE productID = ?"
             var updateStatementQuery : OpaquePointer?
+            
             // compile sql query and check if status is okay
             if(sqlite3_prepare_v2(dbQueue, updateProductStatementString, -1, &updateStatementQuery, nil)) == SQLITE_OK {
-                // bind the values of textfield inputs to sql query
+                
+                // convert text inputs to appropriate type in db
                 let updateProductStock = Int32(updateProductStock.text ?? "") ?? 0
                 
                 let productPriceString = updateProductPrice.text ?? ""
@@ -149,13 +151,12 @@ class UpdateProductViewController: UIViewController, UITextFieldDelegate, UIText
         
         let deleteDuplicateProduct = sqlite3_exec(dbQueue, "DELETE FROM ProductList WHERE productID NOT IN (SELECT MIN(productID) FROM ProductList GROUP BY productName)", nil, nil, nil)
         
-        
         if(deleteDuplicateProduct != SQLITE_OK){
-            print("[AddProductViewController>deleteDuplicateProduct] Cannot delete duplicate in ProductList table 🙁")
+            print("[UpdateProductViewController>deleteDuplicateProduct] Cannot delete duplicate in ProductList table 🙁")
             checkSuccess = false
         }
         else{
-            print("[AddProductViewController>deleteDuplicateProduct] ProductList table duplicate deleted 🥳")
+            print("[UpdateProductViewController>deleteDuplicateProduct] ProductList table duplicate deleted 🥳")
             checkSuccess = true
         }
         
