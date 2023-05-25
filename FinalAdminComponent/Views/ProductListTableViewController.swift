@@ -134,9 +134,6 @@ class ProductListTableViewController: UIViewController, UITableViewDataSource, U
     
     // MARK: loadSavedProducts
     // ===============================SQL LOAD SAVED PRODUCTS START===============================
-    let selectStatementString = "SELECT productID, productName, productStock, productPrice, productImage FROM ProductList"
-    
-    var selectStatementQuery: OpaquePointer?
     var showData = ""
     
     func loadSavedProducts(){
